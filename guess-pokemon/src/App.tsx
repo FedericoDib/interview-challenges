@@ -1,13 +1,14 @@
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 import getPokemon from "./api";
 
 function App() {
   const [pokemon, setPokemon] = useState({id: 0, name: "", image: ""});
   const [input, setInput] = useState("");
+  const inputPokemon = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     getPokemon.random().then((pokemons) => setPokemon(pokemons));
@@ -16,16 +17,18 @@ function App() {
   function handleSubmit(event: any) {
     event.preventDefault();
     if (input.toLowerCase() === pokemon.name) {
+      inputPokemon.current!.style.display = "none";
       document.getElementById("img")!.style.filter = "none";
       document.getElementById("p")!.style.display = "flex";
-      document.getElementById(
-        "p",
-      )!.innerText = `${pokemon.name} is the ${pokemon.id}th Pokémon! ✅`;
-      document.getElementById("input")!.style.display = "none";
+      document.getElementById("p")!.innerText = `${pokemon.name.toUpperCase()} is the ${
+        pokemon.id
+      }th Pokémon! ✅`;
+      //document.getElementById("input")!.style.display = "none";
       document.getElementById("button-playAgain")!.style.display = "flex";
       document.getElementById("button-guess")!.style.display = "none";
     } else {
       document.getElementById("p")!.style.display = "flex";
+      document.getElementById("input")!.setAttribute("class", "nes-input is-error");
       document.getElementById("p")!.innerText = "Incorrect, try again!";
     }
   }
@@ -40,6 +43,7 @@ function App() {
     getPokemon.random().then((pokemons) => setPokemon(pokemons));
     document.getElementById("img")!.style.filter = "brightness(0)";
     document.getElementById("input")!.style.display = "flex";
+    document.getElementById("input")!.setAttribute("class", "nes-input");
     document.getElementById("button-playAgain")!.style.display = "none";
     document.getElementById("button-guess")!.style.display = "flex";
     document.getElementById("p")!.style.display = "none";
@@ -55,6 +59,8 @@ function App() {
         </p>
         <form action="" onSubmit={handleSubmit}>
           <input
+            autoFocus
+            ref={inputPokemon}
             id="input"
             type="text"
             className="nes-input"
