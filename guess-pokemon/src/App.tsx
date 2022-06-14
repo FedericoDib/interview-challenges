@@ -16,7 +16,17 @@ function App() {
   function handleSubmit(event: any) {
     event.preventDefault();
     if (input.toLowerCase() === pokemon.name) {
-      return console.log("Adivinaste!");
+      document.getElementById("img")!.style.filter = "none";
+      document.getElementById("p")!.style.display = "flex";
+      document.getElementById(
+        "p",
+      )!.innerText = `${pokemon.name} is the ${pokemon.id}th Pokémon! ✅`;
+      document.getElementById("input")!.style.display = "none";
+      document.getElementById("button-playAgain")!.style.display = "flex";
+      document.getElementById("button-guess")!.style.display = "none";
+    } else {
+      document.getElementById("p")!.style.display = "flex";
+      document.getElementById("p")!.innerText = "Incorrect, try again!";
     }
   }
 
@@ -24,17 +34,41 @@ function App() {
     setInput(event.target.value);
   }
 
+  function handlePlayAgain(event: any) {
+    event.preventDefault();
+    setInput("");
+    getPokemon.random().then((pokemons) => setPokemon(pokemons));
+    document.getElementById("img")!.style.filter = "brightness(0)";
+    document.getElementById("input")!.style.display = "flex";
+    document.getElementById("button-playAgain")!.style.display = "none";
+    document.getElementById("button-guess")!.style.display = "flex";
+    document.getElementById("p")!.style.display = "none";
+  }
+
   return (
     <main>
-      <p>Who&apos;s that Pokémon?</p>
-      <img id="img" alt="" src={pokemon.image} />
-      <p id="p" className="name">
-        {pokemon.name}
-      </p>
-      <form action="" onSubmit={handleSubmit}>
-        <input type="text" value={input} onChange={handleChange} />
-        <button>Guess!</button>
-      </form>
+      <div className="main">
+        <p>Who&apos;s that Pokémon?</p>
+        <img id="img" alt="" src={pokemon.image} />
+        <p id="p" className="name">
+          {" "}
+        </p>
+        <form action="" onSubmit={handleSubmit}>
+          <input
+            id="input"
+            type="text"
+            className="nes-input"
+            value={input}
+            onChange={handleChange}
+          />
+          <button id="button-guess" className="nes-btn is-primary">
+            Guess!
+          </button>
+          <button onClick={handlePlayAgain} id="button-playAgain" className="nes-btn is-primary">
+            Play again!
+          </button>
+        </form>
+      </div>
     </main>
   );
 }
